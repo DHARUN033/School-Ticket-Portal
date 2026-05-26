@@ -13,6 +13,301 @@
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Zoho Desk Scripts -->
+    <script src='https://static.zohocdn.com/zohodeskstatic/app/js/jqueryandencoder.ef05974972bf3bca1b87.js'></script>
+    <script>
+        window.addEventListener('pageshow', function () {
+            const submitButton = document.getElementById('zsSubmitButton_261740000000389271');
+            if (submitButton) {  
+                submitButton.removeAttribute('disabled');
+            }
+            const captchaTextField = document.forms['zsWebToCase_261740000000389271']['zsWebFormCaptchaWord'];
+            if(window.zsRegenerateCaptcha && captchaTextField.value) {
+                captchaTextField.value = '';
+                captchaTextField.focus();
+                zsRegenerateCaptcha();
+            }
+        });
+        function trimBoth(str){return jQuery.trim(str);}
+        function setAllDependancyFieldsMapping(){
+            var mapDependancyLabels = getMapDependenySelectValues(jQuery("[id='property(module)']").val(), "JSON_MAP_DEP_LABELS");
+            if(mapDependancyLabels){
+                for(var i = 0; i < mapDependancyLabels.length; i++){
+                    var label = mapDependancyLabels[i];
+                    var obj = document.forms['zsWebToCase_261740000000389271'][label];
+                    if(obj){setDependent(obj, true);}
+                }
+            }
+        }
+        function getMapDependenySelectValues(module, key){
+            var dependencyObj = jQuery.parseJSON( jQuery("[id='dependent_field_values_" + module + "']").val() );
+            if(dependencyObj == undefined){return dependencyObj;}
+            return dependencyObj[key];
+        }
+        function setDependent(obj, isload){
+            var name = obj.id || (obj[0] && obj[0].id) || "";
+            var module = jQuery("[id='property(module)']").val();
+            var val = "";
+            var myObject = getMapDependenySelectValues(module, "JSON_VALUES");
+            if(myObject !=undefined){val = myObject[name];}
+            var mySelObject = getMapDependenySelectValues(module, "JSON_SELECT_VALUES");
+            if(val != null && val != "" && val != "null" && mySelObject){
+                var fields = val;
+                for(var i in fields){
+                    if (fields.hasOwnProperty(i)){
+                        var isDependent = false;
+                        var label = i;
+                        var values = fields[i];
+                        if(label.indexOf(")") > -1){label = label.replace(/\)/g, '_____');}
+                        if(label.indexOf("(") > -1){label = label.replace(/\(/g, '____');}
+                        if(label.indexOf(".") > -1){label = label.replace(/\./g, '___');}
+                        var depObj = document.forms['zsWebToCase_261740000000389271'][label];
+                        if(depObj && depObj.options){
+                            var mapValues = "";
+                            var selected_val = depObj.value;
+                            var depLen = depObj.options.length-1;
+                            for (var n = depLen; n >= 0; n--) {
+                                if (depObj.options[n].selected){
+                                    if(mapValues == ""){mapValues = depObj.options[n].value;}
+                                    else{mapValues = mapValues + ";;;"+depObj.options[n].value;}
+                                }
+                            }
+                            depObj.value = "";
+                            var selectValues = mySelObject[label];
+                            for(var k in values){
+                                var rat = k;
+                                if(rat == "-None-"){rat = "";}
+                                var parentValues = mySelObject[name];
+                                if(rat == trimBoth(obj.value)){
+                                    isDependent = true;
+                                    depObj.length = 0;
+                                    var depvalues = values[k];
+                                    var depLen = depvalues.length - 1;
+                                    for(var j = 0; j <= depLen; j++){
+                                        var optionElement = document.createElement("OPTION");
+                                        var displayValue = depvalues[j];
+                                        var actualValue = displayValue;
+                                        if(actualValue == "-None-"){
+                                            optionElement.value = "";
+                                            displayValue = "-None-";
+                                        }else{
+                                            optionElement.value = actualValue;
+                                        }
+                                        optionElement.text = displayValue;
+                                        if(mapValues != undefined){
+                                            var mapValue = mapValues.split(";;;");
+                                            var len = mapValue.length;
+                                            for(var p = 0; p < len; p++){
+                                                if(actualValue == mapValue[p]){optionElement.selected = true;}
+                                            }
+                                        }
+                                        depObj.options.add(optionElement);
+                                    }
+                                }
+                            }
+                            if(!isDependent){
+                                depObj.length = 0;
+                                var len = selectValues.length;
+                                for(var j = 0; j < len; j++){
+                                    var actualValue = selectValues[j];
+                                    var optionElement = document.createElement("OPTION");
+                                    if(actualValue == "-None-"){optionElement.value = "";}
+                                    else{optionElement.value = selectValues[j];}
+                                    optionElement.text = selectValues[j];
+                                    depObj.options.add(optionElement);
+                                }
+                                depObj.value =  selected_val;
+                            }
+                            if(!isload){setDependent(depObj,false);}
+                            var jdepObj = jQuery(depObj);
+                            if(jdepObj.hasClass('select2-offscreen')){jdepObj.select2("val", jdepObj.val());}
+                        }
+                    }
+                }
+            }
+        }
+        var zsWebFormMandatoryFields = new Array("Contact Name","Email","Subject");
+        var zsFieldsDisplayLabelArray = new Array("Last Name","Email","Subject");
+        function reformatAllDateFields() {
+            const dateFields = document.querySelectorAll('.dob-field');
+            dateFields.forEach(field => {
+                if (field.value && field.value.includes('-')) {
+                    const parts = field.value.split('-');
+                    if (parts.length === 3) {
+                        const [yyyy, mm, dd] = parts;
+                        field.type= 'text';
+                        field.value = `${dd}/${mm}/${yyyy}`;
+                    }
+                }
+            });
+        }
+        function zsValidateMandatoryFields(){
+            var name = '';
+            var email = '';
+            var isError = 0;
+            for(var index = 0; index < zsWebFormMandatoryFields.length; index++){
+                isError = 0;
+                var fieldObject = document.forms['zsWebToCase_261740000000389271'][zsWebFormMandatoryFields[index]];
+                if(fieldObject){
+                    if(((fieldObject.value).replace(/^\s+|\s+$/g, '')).length == 0){
+                        alert(zsFieldsDisplayLabelArray[index] +' cannot be empty ');
+                        fieldObject.focus();
+                        isError = 1;
+                        return false;
+                    }else{
+                        if(fieldObject.name == 'Email'){
+                            if(!fieldObject.value.match(/^([\w_][\w\-_.+\'&]*)@(?=.{4,256}$)(([\w]+)([\-_]*[\w])*[\.])+[a-zA-Z]{2,22}$/)){
+                                isError = 1;
+                                alert('Enter a valid email-Id');
+                                fieldObject.focus();
+                                return false;
+                            }
+                        }
+                    }
+                    if(fieldObject.nodeName == 'SELECT'){
+                        if(fieldObject.options[fieldObject.selectedIndex].value == '-None-'){
+                            alert(zsFieldsDisplayLabelArray[index] +' cannot be none');
+                            fieldObject.focus();
+                            isError = 1;
+                            return false;
+                        }
+                    }
+                    if(fieldObject.type == 'checkbox'){
+                        if (fieldObject.checked == false){
+                            alert('Please accept '+zsFieldsDisplayLabelArray[index]);
+                            fieldObject.focus();
+                            isError = 1;
+                            return false;
+                        }
+                    }
+                }
+            }
+            if(isError == 0){
+                reformatAllDateFields();
+                document.getElementById('zsSubmitButton_261740000000389271').setAttribute('disabled', 'disabled');
+                return true;
+            }
+            return false;
+        }
+        var ZSEncoder = {
+            encodeForHTML : function(str){
+                if(str && typeof(str)==='string'){return jQuery.encoder.encodeForHTML(str);}
+                return str;
+            },
+            encodeForHTMLAttribute : function(str) {
+                if(str && typeof(str)==='string'){return jQuery.encoder.encodeForHTMLAttribute(str);}
+                return str;
+            }
+        };
+        var zsAttachedAttachmentsCount = 0;
+        var zsAllowedAttachmentLimit = 4;
+        var zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
+        
+        function zsRenderBrowseFileAttachment(zsAttachmentObject, zsAttachmentDetails){
+            if(zsAttachmentObject != ''){
+                if((zsAttachmentDetails.files && (zsAttachmentDetails.files[0].size/(1024*1024))>20)){
+                    zsAttachmentDetails.value='';
+                    alert('Maximum allowed file size is 20MB.');
+                    return;
+                }
+                if(zsAttachedAttachmentsCount < 5){
+                    var zsFileName='';
+                    if((zsAttachmentObject.indexOf('\\') > -1)){
+                        var zsAttachmentDataSplits = zsAttachmentObject.split('\\');
+                        var zsAttachmentDataSplitsLen = zsAttachmentDataSplits.length;
+                        zsFileName = zsAttachmentDataSplits[zsAttachmentDataSplitsLen - 1];
+                    }else{
+                        zsFileName = zsAttachmentObject;
+                    }
+                    var extension = zsFileName.split('.').pop().toLowerCase();
+                    var unSupportedExtensions = ["ade","adp","apk","appx","appxbundle","bat","cab","cer","chm","cmd","com","cpl","dll","dmg","exe","hlp","hta","ins","iso","isp","jar","js","jse","lnk","mde","msc","msi","msix","msixbundle","msp","mst","nsh","pif","ps1","pst","reg","scr","sct","shb","sys","tmp","url","vb","vbe","vbs","vxd","wsc","wsf","wsh","terminal"];
+                    if(unSupportedExtensions.indexOf(extension)!=-1){
+                        alert("The file wasn't attached since its extension is not supported.");
+                        return;
+                    }
+                    var zsCurrentAttachmentIdTokens = jQuery(zsAttachmentDetails).attr('id').split('_');
+                    var zsCurrentAttachmentId = parseInt(zsCurrentAttachmentIdTokens[1]);
+                    var zsAttachmentIdToBeRemoved = jQuery.inArray(zsCurrentAttachmentId, zsAttachmentFileBrowserIdsList);
+                    zsAttachmentFileBrowserIdsList.splice(zsAttachmentIdToBeRemoved, 1);
+                    var zsNextAttachmentId = zsAttachmentFileBrowserIdsList[0];
+                    var zsnextAttachment = 'zsattachment_'+zsNextAttachmentId;
+                    jQuery('#zsattachment_'+zsCurrentAttachmentId).hide();
+                    jQuery('#'+zsnextAttachment).show();
+                    jQuery('#zsFileBrowseAttachments').append('<div class="filenamecls zsFontClass" id="file_'+zsCurrentAttachmentId+'">'+ ZSEncoder.encodeForHTML(zsFileName) + '<a class="zsfilebrowseAttachment" style="margin-left:10px; color:#ff6448; text-decoration:none;" href="javascript:;" id="fileclose_'+zsCurrentAttachmentId+'">X</a></div>');
+                    zsAttachedAttachmentsCount = zsAttachedAttachmentsCount + 1;
+                }
+            }
+            zsChangeMousePointer();
+        }
+        jQuery(document).off('click.fba').on('click.fba', '.zsfilebrowseAttachment', function(){
+            var currentlyDeletedElement = jQuery(this).attr('id').split('_')[1];
+            jQuery('#zsattachment_'+currentlyDeletedElement).val('');
+            jQuery('#zsattachment_'+currentlyDeletedElement).replaceWith(jQuery('#zsattachment_'+currentlyDeletedElement).clone());
+            jQuery(this).parent().remove();
+            zsAttachedAttachmentsCount = zsAttachedAttachmentsCount - 1;
+            zsAttachmentFileBrowserIdsList.push(parseInt(currentlyDeletedElement));
+            zsRearrangeFileBrowseAttachments();
+            zsChangeMousePointer();
+        });
+        function zsRearrangeFileBrowseAttachments(){
+            jQuery.each(jQuery('input[type = file]'), function(fileIndex, fileObject){
+                fileIndex = fileIndex + 1;
+                if(fileIndex == zsAttachmentFileBrowserIdsList[0]){jQuery('#zsattachment_'+fileIndex).show();}
+                else{jQuery('#zsattachment_'+fileIndex).hide();}
+            });
+        }
+        function zsOpenFileBrowseAttachment(clickEvent){
+            if(zsAttachedAttachmentsCount >= 5){clickEvent.preventDefault();}
+        }
+        function zsChangeMousePointer(){
+            if(zsAttachedAttachmentsCount >= 5){
+                jQuery('#zsMaxLimitMessage').show();
+                jQuery('#zsattachment_1,#zsattachment_2,#zsattachment_3,#zsattachment_4,#zsattachment_5').hide();
+                jQuery('#zsBrowseAttachment').css('cursor', 'default');
+            }else{
+                jQuery('#zsMaxLimitMessage').hide();
+                zsRearrangeFileBrowseAttachments();
+                jQuery('#zsBrowseAttachment').css('cursor', 'pointer');
+            }
+        }
+        document.addEventListener('readystatechange',function(){
+            if(document.readyState === 'complete'){
+                setAllDependancyFieldsMapping();
+                const submitBtn = document.getElementById('zsSubmitButton_261740000000389271');
+                if(submitBtn) { submitBtn.removeAttribute('disabled'); }
+                zsAttachedAttachmentsCount = 0;
+                zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
+                jQuery('#zsFileBrowseAttachments').html('');
+                jQuery.each(jQuery('input[type = file]'), function(fileIndex, fileObject){
+                    var zsAttachmentId = jQuery(fileObject).attr('id');
+                    var zsAttachmentNo = zsAttachmentId.split('_')[1];
+                    var zsAttachedFile = jQuery('#zsattachment_'+zsAttachmentNo);
+                    if(zsAttachedFile[0] != undefined && zsAttachedFile[0].files[0] != undefined){
+                        var zsFileBrowserAttachmentHtml = '';
+                        zsAttachedFileName = zsAttachedFile[0].files[0].name;
+                        zsFileBrowserAttachmentHtml = '<div class="filenamecls zsFontClass" id="file_'+zsAttachmentNo+'">'+ ZSEncoder.encodeForHTML(zsAttachedFileName) +'<a class="zsfilebrowseAttachment" style="margin-left:10px" href="javascript:;" id="fileclose_'+zsAttachmentNo+'">X</a></div>';
+                        jQuery('#zsFileBrowseAttachments').append(zsFileBrowserAttachmentHtml);
+                        zsAttachedAttachmentsCount = zsAttachedAttachmentsCount + 1;
+                        var zsAttachmentIdToBeRemoved = jQuery.inArray(parseInt(zsAttachmentNo), zsAttachmentFileBrowserIdsList);
+                        zsAttachmentFileBrowserIdsList.splice(zsAttachmentIdToBeRemoved, 1);
+                    }
+                });
+                zsRearrangeFileBrowseAttachments();
+                zsChangeMousePointer();
+            }
+        });
+        function zsResetWebForm(webFormId){
+            document.forms['zsWebToCase_'+webFormId].reset();
+            document.getElementById('zsSubmitButton_261740000000389271').removeAttribute('disabled');
+            setAllDependancyFieldsMapping();
+            zsAttachedAttachmentsCount = 0;
+            zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
+            jQuery('#zsFileBrowseAttachments').html('');
+            zsRearrangeFileBrowseAttachments();
+            zsChangeMousePointer();
+        }
+    </script>
 </head>
 <body>
     <!-- Background Decor -->
@@ -55,59 +350,105 @@
             </div>
         </section>
 
-        <!-- FORM PAGE VIEW -->
+        <!-- FORM PAGE VIEW (Zoho Desk Web-to-Case Embedded) -->
         <section id="view-form" class="view-section">
             <div class="form-card">
                 <h2>Submit a Support <span>Ticket</span></h2>
-                <p class="form-subtitle">Fill in the details below to raise your support request.</p>
+                <p class="form-subtitle">Raise a support request directly linked with our helpdesk administration.</p>
 
-                <form id="ticket-form" novalidate>
+                <form name='zsWebToCase_261740000000389271' id='zsWebToCase_261740000000389271' action='https://desk.zoho.in/support/WebToCase' method='POST' onSubmit='return zsValidateMandatoryFields()' enctype='multipart/form-data'>
+                    <input type='hidden' name='xnQsjsdp' value='edbsna916fd6cde87f16847b752cd96a8b7af'/>
+                    <input type='hidden' name='xmIwtLD' value='edbsn1a73d56b159f3b3a84e2edb88aed1f2c78eecd884771338d6a9e1f2556623b7a'/>
+                    <input type='hidden' name='xJdfEaS' value=''/>
+                    <input type='hidden' name='actionType' value='Q2FzZXM='/>
+                    <input type="hidden" id="property(module)" value="Cases"/>
+                    <input type="hidden" id="dependent_field_values_Cases" value="{&quot;JSON_VALUES&quot;:{},&quot;JSON_SELECT_VALUES&quot;:{},&quot;JSON_MAP_DEP_LABELS&quot;:[]}"/>
+                    <input type='hidden' name='returnURL' value='https://school-ticket-portal.vercel.app/'/>
+
                     <div class="form-grid">
                         <div class="input-group">
-                            <label for="requester-name">Full Name <span class="required">*</span></label>
-                            <input type="text" id="requester-name" placeholder="John Doe" required>
-                            <span class="error-msg">Please enter your name</span>
+                            <label>Student Name</label>
+                            <input type='text' maxlength='120' name='Student Name' value='' placeholder="John Doe" />
                         </div>
 
                         <div class="input-group">
-                            <label for="requester-email">Email Address <span class="required">*</span></label>
-                            <input type="email" id="requester-email" placeholder="johndoe@school.edu" required>
-                            <span class="error-msg">Please enter a valid email</span>
+                            <label>Last Name <span class="required">*</span></label>
+                            <input type='text' maxlength='120' name='Contact Name' class='manfieldbdr' placeholder="Last/Family Name" />
                         </div>
 
                         <div class="input-group">
-                            <label for="ticket-category">Category <span class="required">*</span></label>
-                            <select id="ticket-category" required>
-                                <option value="" disabled selected>Select category</option>
-                                <option value="IT Support">IT & Tech Support</option>
-                                <option value="Maintenance">Facilities & Maintenance</option>
-                                <option value="Academic">Academic Resources</option>
-                                <option value="General">General & Other</option>
-                            </select>
-                            <span class="error-msg">Please select a category</span>
+                            <label>Email <span class="required">*</span></label>
+                            <input type='text' maxlength='120' name='Email' value='' class='manfieldbdr' placeholder="johndoe@school.edu" />
                         </div>
 
                         <div class="input-group">
-                            <label for="ticket-priority">Priority <span class="required">*</span></label>
-                            <select id="ticket-priority" required>
-                                <option value="" disabled selected>Select priority</option>
-                                <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
-                            </select>
-                            <span class="error-msg">Please select a priority</span>
+                            <label>Phone</label>
+                            <input type='text' maxlength='120' name='Phone' value='' placeholder="+1 (555) 000-0000" />
                         </div>
 
                         <div class="input-group span-2">
-                            <label for="ticket-subject">Subject <span class="required">*</span></label>
-                            <input type="text" id="ticket-subject" placeholder="Brief summary of the issue" required>
-                            <span class="error-msg">Please enter a subject</span>
+                            <label>Subject <span class="required">*</span></label>
+                            <input type='text' maxlength='255' name='Subject' value='' class='manfieldbdr' placeholder="Brief summary of the issue" />
                         </div>
 
                         <div class="input-group span-2">
-                            <label for="ticket-desc">Description <span class="required">*</span></label>
-                            <textarea id="ticket-desc" placeholder="Provide detailed details about the issue..." rows="5" required></textarea>
-                            <span class="error-msg">Please provide a description (min. 10 characters)</span>
+                            <label>Description</label>
+                            <textarea name='Description' maxlength='3000' placeholder="Provide detailed details about the issue..." rows="5"></textarea>
+                        </div>
+
+                        <!-- Hidden Status & Source -->
+                        <div style='display:none'>
+                            <select name='Status' id='Status'>
+                                <option value='Open' selected>Open</option>
+                                <option value='On Hold'>On Hold</option>
+                                <option value='Escalated'>Escalated</option>
+                                <option value='Closed'>Closed</option>
+                            </select>
+                        </div>
+
+                        <div style='display:none'>
+                            <select name='Source / Orgin' id='CASECF5'>
+                                <option value='' >-None-</option>
+                                <option value='VLE' >VLE</option>
+                                <option value='Parent Portal' >Parent Portal</option>
+                                <option value='Email' >Email</option>
+                                <option value='Walk-in' >Walk-in</option>
+                                <option value='Phone' >Phone</option>
+                                <option value='Live Chat' >Live Chat</option>
+                                <option value='Social Media' >Social Media</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Category</label>
+                            <select name='Category' id='Category' onchange="setDependent(this, false)">
+                                <option value='General'>General</option>
+                                <option value='Defects'>Defects</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Sub Category</label>
+                            <select name='Sub Category' id='Sub Category' onchange="setDependent(this, false)">
+                                <option value='Sub General'>Sub General</option>
+                                <option value='Sub Defects'>Sub Defects</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group span-2">
+                            <label>Attachment</label>
+                            <div class="attachment-box">
+                                <span class="zsFontClass wtcuploadfile" id="zsBrowseAttachment">Attach files</span>
+                                <input class="wtcuploadinput" type='file' name='attachment_1' id='zsattachment_1' onclick='zsOpenFileBrowseAttachment(event)' onchange='zsRenderBrowseFileAttachment(this.value, this)'/>
+                                <input class="wtcuploadinput" type='file' name='attachment_2' id='zsattachment_2' style='display:none;' onclick='zsOpenFileBrowseAttachment(event)' onchange='zsRenderBrowseFileAttachment(this.value, this)'/>
+                                <input class="wtcuploadinput" type='file' name='attachment_3' id='zsattachment_3' style='display:none;' onclick='zsOpenFileBrowseAttachment(event)' onchange='zsRenderBrowseFileAttachment(this.value, this)'/>
+                                <input class="wtcuploadinput" type='file' name='attachment_4' id='zsattachment_4' style='display:none;' onclick='zsOpenFileBrowseAttachment(event)' onchange='zsRenderBrowseFileAttachment(this.value, this)'/>
+                                <input class="wtcuploadinput" type='file' name='attachment_5' id='zsattachment_5' style='display:none;' onclick='zsOpenFileBrowseAttachment(event)' onchange='zsRenderBrowseFileAttachment(this.value, this)'/>
+                                <div class="clboth"></div>
+                                <span id='zsMaxSizeMessage' style='color:var(--text-muted);font-size: 11px;float: left;margin-top:8px;'>Each file can be up to 20MB.</span>
+                                <span id='zsMaxLimitMessage' style='color:#ff6448;font-size: 11px;float: left;margin-left: 14px;display: none;margin-top:8px;'>You can attach up to 5 files.</span>
+                                <div id='zsFileBrowseAttachments'></div>
+                            </div>
                         </div>
                     </div>
 
@@ -116,32 +457,17 @@
                             <i data-lucide="arrow-left"></i>
                             <span>Cancel</span>
                         </button>
-                        <button type="submit" class="btn btn-primary">
-                            <span>Submit Ticket</span>
-                            <i data-lucide="check"></i>
-                        </button>
+                        <input type="submit" id="zsSubmitButton_261740000000389271" class="btn btn-primary" value="Submit Ticket">
                     </div>
                 </form>
             </div>
         </section>
     </main>
 
-    <!-- Success Modal -->
-    <div class="modal-overlay" id="success-modal">
-        <div class="modal-card">
-            <div class="modal-icon">
-                <i data-lucide="check-circle"></i>
-            </div>
-            <h3>Ticket Submitted Successfully!</h3>
-            <p>Your ticket has been logged in our system. Our support staff will contact you via email.</p>
-            <button class="btn btn-primary" id="btn-modal-ok">OK</button>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
-            <p>&copy; 2026 EduSolve School Ticket System.</p>
+            <p>&copy; 2026 EduSolve School Ticket System. Powered by Zoho Desk.</p>
         </div>
     </footer>
 
