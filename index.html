@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Ticket Portal</title>
+    <!-- Meta Description -->
+    <meta name="description" content="A simple and clean School Ticket Portal for students and staff.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Decor -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo" id="logo-link">
+                <div class="logo-icon">
+                    <i data-lucide="graduation-cap"></i>
+                </div>
+                <span class="logo-text">Edu<span>Solve</span></span>
+            </a>
+            <nav class="nav-menu">
+                <button class="nav-btn active" id="nav-home">Home</button>
+                <button class="nav-btn" id="nav-form">New Ticket</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- LANDING PAGE VIEW -->
+        <section id="view-landing" class="view-section active">
+            <div class="hero">
+                <div class="badge">
+                    <i data-lucide="sparkles"></i>
+                    <span>School Support System</span>
+                </div>
+                <h1>Welcome to the School <span>Ticket Portal</span></h1>
+                <p class="hero-lead">Need assistance with IT, classroom equipment, facilities, or academic requests? Open a ticket below and our support staff will assist you shortly.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-lg" id="btn-go-to-form">
+                        <span>Go to Ticket Form</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORM PAGE VIEW -->
+        <section id="view-form" class="view-section">
+            <div class="form-card">
+                <h2>Submit a Support <span>Ticket</span></h2>
+                <p class="form-subtitle">Fill in the details below to raise your support request.</p>
+
+                <form id="ticket-form" novalidate>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="requester-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="requester-name" placeholder="John Doe" required>
+                            <span class="error-msg">Please enter your name</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="requester-email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="requester-email" placeholder="johndoe@school.edu" required>
+                            <span class="error-msg">Please enter a valid email</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="ticket-category">Category <span class="required">*</span></label>
+                            <select id="ticket-category" required>
+                                <option value="" disabled selected>Select category</option>
+                                <option value="IT Support">IT & Tech Support</option>
+                                <option value="Maintenance">Facilities & Maintenance</option>
+                                <option value="Academic">Academic Resources</option>
+                                <option value="General">General & Other</option>
+                            </select>
+                            <span class="error-msg">Please select a category</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="ticket-priority">Priority <span class="required">*</span></label>
+                            <select id="ticket-priority" required>
+                                <option value="" disabled selected>Select priority</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                            <span class="error-msg">Please select a priority</span>
+                        </div>
+
+                        <div class="input-group span-2">
+                            <label for="ticket-subject">Subject <span class="required">*</span></label>
+                            <input type="text" id="ticket-subject" placeholder="Brief summary of the issue" required>
+                            <span class="error-msg">Please enter a subject</span>
+                        </div>
+
+                        <div class="input-group span-2">
+                            <label for="ticket-desc">Description <span class="required">*</span></label>
+                            <textarea id="ticket-desc" placeholder="Provide detailed details about the issue..." rows="5" required></textarea>
+                            <span class="error-msg">Please provide a description (min. 10 characters)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-back-home">
+                            <i data-lucide="arrow-left"></i>
+                            <span>Cancel</span>
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <span>Submit Ticket</span>
+                            <i data-lucide="check"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-card">
+            <div class="modal-icon">
+                <i data-lucide="check-circle"></i>
+            </div>
+            <h3>Ticket Submitted Successfully!</h3>
+            <p>Your ticket has been logged in our system. Our support staff will contact you via email.</p>
+            <button class="btn btn-primary" id="btn-modal-ok">OK</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 EduSolve School Ticket System.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
