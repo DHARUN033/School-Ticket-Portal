@@ -128,7 +128,7 @@
             }
         }
         var zsWebFormMandatoryFields = new Array("Contact Name","Email","Subject");
-        var zsFieldsDisplayLabelArray = new Array("Last Name","Email","Subject");
+        var zsFieldsDisplayLabelArray = new Array("Parent Last Name","Email","Subject");
         function reformatAllDateFields() {
             const dateFields = document.querySelectorAll('.dob-field');
             dateFields.forEach(field => {
@@ -372,8 +372,13 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Last Name <span class="required">*</span></label>
-                            <input type='text' maxlength='120' name='Contact Name' class='manfieldbdr' placeholder="Last/Family Name" />
+                            <label>Parent First Name</label>
+                            <input type='text' maxlength='120' name='First Name' value='' placeholder="First Name" />
+                        </div>
+
+                        <div class="input-group">
+                            <label>Parent Last Name <span class="required">*</span></label>
+                            <input type='text' maxlength='120' name='Contact Name' class='manfieldbdr' placeholder="Last Name" />
                         </div>
 
                         <div class="input-group">
@@ -386,6 +391,16 @@
                             <input type='text' maxlength='120' name='Phone' value='' placeholder="+1 (555) 000-0000" />
                         </div>
 
+                        <div class="input-group">
+                            <label>Case Type</label>
+                            <select name='Case Type' id='CASECF6' onchange="setDependent(this, false)">
+                                <option value=''>-None-</option>
+                                <option value='Feedback'>Feedback</option>
+                                <option value='Inquiry'>Inquiry</option>
+                                <option value='Request'>Request</option>
+                            </select>
+                        </div>
+
                         <div class="input-group span-2">
                             <label>Subject <span class="required">*</span></label>
                             <input type='text' maxlength='255' name='Subject' value='' class='manfieldbdr' placeholder="Brief summary of the issue" />
@@ -393,7 +408,7 @@
 
                         <div class="input-group span-2">
                             <label>Description</label>
-                            <textarea name='Description' maxlength='3000' placeholder="Provide detailed details about the issue..." rows="5"></textarea>
+                            <textarea name='Description' maxlength='3000' placeholder="Provide details about the issue..." rows="5"></textarea>
                         </div>
 
                         <!-- Hidden Status & Source -->
@@ -409,7 +424,7 @@
                         <div style='display:none'>
                             <select name='Source / Orgin' id='CASECF5'>
                                 <option value='' >-None-</option>
-                                <option value='VLE' >VLE</option>
+                                <option value='VLE' selected>VLE</option>
                                 <option value='Parent Portal' >Parent Portal</option>
                                 <option value='Email' >Email</option>
                                 <option value='Walk-in' >Walk-in</option>
