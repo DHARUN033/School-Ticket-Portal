@@ -362,7 +362,7 @@
                     <input type='hidden' name='xJdfEaS' value=''/>
                     <input type='hidden' name='actionType' value='Q2FzZXM='/>
                     <input type="hidden" id="property(module)" value="Cases"/>
-                    <input type="hidden" id="dependent_field_values_Cases" value="{&quot;JSON_VALUES&quot;:{},&quot;JSON_SELECT_VALUES&quot;:{},&quot;JSON_MAP_DEP_LABELS&quot;:[]}"/>
+                    <input type="hidden" id="dependent_field_values_Cases" value="{&#34;JSON_VALUES&#34;:{&#34;Category&#34;:{&#34;Sub Category&#34;:{&#34;Others&#34;:[&#34;None&#34;,&#34;Others&#34;],&#34;Other Activities&#34;:[&#34;None&#34;,&#34;Events&#34;,&#34;Others&#34;],&#34;Communications&#34;:[&#34;None&#34;,&#34;Email issues&#34;,&#34;Other communication concerns&#34;],&#34;Accounts and Fees&#34;:[&#34;None&#34;,&#34;Tuition Fee Queries&#34;,&#34;Payment Issues and Delay&#34;,&#34;Refund Requests&#34;,&#34;Discounts and Scholarships&#34;,&#34;Late Payment Charges&#34;],&#34;Academic&#34;:[&#34;None&#34;,&#34;Curriculum Concerns&#34;,&#34;Teaching Quality&#34;,&#34;Homework/Assignments&#34;,&#34;Exam and Assessment Issues&#34;,&#34;SEN Support&#34;,&#34;Teacher Conduct and Communication&#34;],&#34;School Operations&#34;:[&#34;None&#34;,&#34;FOH Assistance&#34;,&#34;Catering&#34;,&#34;Uniform Shop&#34;,&#34;VLE&#34;,&#34;Medical&#34;,&#34;ECAs&#34;,&#34;After-School Activities&#34;,&#34;Others&#34;],&#34;Admissions and Enrolment&#34;:[&#34;None&#34;,&#34;Admission Process and Requirements&#34;,&#34;Waiting List Queries&#34;,&#34;Transfer Requests&#34;,&#34;Document Submission and Verification&#34;],&#34;Student Conduct and Discipline&#34;:[&#34;None&#34;,&#34;Behavior Concerns&#34;,&#34;Bullying and Peer Conflicts&#34;,&#34;Classroom Disruptions&#34;,&#34;Detention and Suspension Queries&#34;],&#34;Child Protection and Safeguarding&#34;:[&#34;None&#34;,&#34;EYFS&#34;,&#34;Primary / KS1 / KS2&#34;,&#34;Secondary&#34;],&#34;Health and Safety&#34;:[&#34;None&#34;,&#34;School Environment and Cleanliness&#34;,&#34;Medical Assistance and First Aid&#34;,&#34;Bullying and Student Safety&#34;,&#34;Playground and Equipment Safety&#34;],&#34;Google Review&#34;:[&#34;None&#34;,&#34;Google Review&#34;],&#34;Transport&#34;:[&#34;None&#34;,&#34;Bus Route and Scheduling Issues&#34;,&#34;Driver Behaviour and Conduct&#34;,&#34;Late or Missed Pickups&#34;,&#34;Seating and Capacity Issues&#34;,&#34;Lost Items on Bus&#34;],&#34;None&#34;:[&#34;None&#34;]}}},&#34;JSON_SELECT_VALUES&#34;:{&#34;Category&#34;:[&#34;None&#34;,&#34;Health and Safety&#34;,&#34;Academic&#34;,&#34;Transport&#34;,&#34;Accounts and Fees&#34;,&#34;Admissions and Enrolment&#34;,&#34;School Operations&#34;,&#34;Student Conduct and Discipline&#34;,&#34;Child Protection and Safeguarding&#34;,&#34;Communications&#34;,&#34;Google Review&#34;,&#34;Other Activities&#34;,&#34;Others&#34;],&#34;Sub Category&#34;:[&#34;None&#34;,&#34;Curriculum Concerns&#34;,&#34;Teaching Quality&#34;,&#34;Homework/Assignments&#34;,&#34;Exam and Assessment Issues&#34;,&#34;SEN Support&#34;,&#34;Teacher Conduct and Communication&#34;,&#34;School Environment and Cleanliness&#34;,&#34;Medical Assistance and First Aid&#34;,&#34;Bullying and Student Safety&#34;,&#34;Playground and Equipment Safety&#34;,&#34;Bus Route and Scheduling Issues&#34;,&#34;Driver Behaviour and Conduct&#34;,&#34;Late or Missed Pickups&#34;,&#34;Seating and Capacity Issues&#34;,&#34;Lost Items on Bus&#34;,&#34;Tuition Fee Queries&#34;,&#34;Payment Issues and Delay&#34;,&#34;Refund Requests&#34;,&#34;Discounts and Scholarships&#34;,&#34;Late Payment Charges&#34;,&#34;Admission Process and Requirements&#34;,&#34;Waiting List Queries&#34;,&#34;Transfer Requests&#34;,&#34;Document Submission and Verification&#34;,&#34;FOH Assistance&#34;,&#34;Catering&#34;,&#34;Uniform Shop&#34;,&#34;VLE&#34;,&#34;Medical&#34;,&#34;Cleanliness and Hygiene&#34;,&#34;ECAs&#34;,&#34;After-School Activities&#34;,&#34;Behavior Concerns&#34;,&#34;Bullying and Peer Conflicts&#34;,&#34;Classroom Disruptions&#34;,&#34;Detention and Suspension Queries&#34;,&#34;EYFS&#34;,&#34;Primary / KS1 / KS2&#34;,&#34;Secondary&#34;,&#34;Email issues&#34;,&#34;Other communication concerns&#34;,&#34;Google Review&#34;,&#34;Events&#34;,&#34;Others&#34;]},&#34;JSON_MAP_DEP_LABELS&#34;:[&#34;Category&#34;]}"/>
                     <input type='hidden' name='returnURL' value='https://school-ticket-portal.vercel.app/'/>
 
                     <div class="form-grid">
@@ -437,16 +437,69 @@
                         <div class="input-group">
                             <label>Category</label>
                             <select name='Category' id='Category' onchange="setDependent(this, false)">
-                                <option value='General'>General</option>
-                                <option value='Defects'>Defects</option>
+                                <option value='None'>None</option>
+                                <option value='Health and Safety'>Health and Safety</option>
+                                <option value='Academic'>Academic</option>
+                                <option value='Transport'>Transport</option>
+                                <option value='Accounts and Fees'>Accounts and Fees</option>
+                                <option value='Admissions and Enrolment'>Admissions and Enrolment</option>
+                                <option value='School Operations'>School Operations</option>
+                                <option value='Student Conduct and Discipline'>Student Conduct and Discipline</option>
+                                <option value='Child Protection and Safeguarding'>Child Protection and Safeguarding</option>
+                                <option value='Communications'>Communications</option>
+                                <option value='Google Review'>Google Review</option>
+                                <option value='Other Activities'>Other Activities</option>
+                                <option value='Others'>Others</option>
                             </select>
                         </div>
 
                         <div class="input-group">
                             <label>Sub Category</label>
                             <select name='Sub Category' id='Sub Category' onchange="setDependent(this, false)">
-                                <option value='Sub General'>Sub General</option>
-                                <option value='Sub Defects'>Sub Defects</option>
+                                <option value='None'>None</option>
+                                <option value='Curriculum Concerns'>Curriculum Concerns</option>
+                                <option value='Teaching Quality'>Teaching Quality</option>
+                                <option value='Homework/Assignments'>Homework/Assignments</option>
+                                <option value='Exam and Assessment Issues'>Exam and Assessment Issues</option>
+                                <option value='SEN Support'>SEN Support</option>
+                                <option value='Teacher Conduct and Communication'>Teacher Conduct and Communication</option>
+                                <option value='School Environment and Cleanliness'>School Environment and Cleanliness</option>
+                                <option value='Medical Assistance and First Aid'>Medical Assistance and First Aid</option>
+                                <option value='Bullying and Student Safety'>Bullying and Student Safety</option>
+                                <option value='Playground and Equipment Safety'>Playground and Equipment Safety</option>
+                                <option value='Bus Route and Scheduling Issues'>Bus Route and Scheduling Issues</option>
+                                <option value='Driver Behaviour and Conduct'>Driver Behaviour and Conduct</option>
+                                <option value='Late or Missed Pickups'>Late or Missed Pickups</option>
+                                <option value='Seating and Capacity Issues'>Seating and Capacity Issues</option>
+                                <option value='Lost Items on Bus'>Lost Items on Bus</option>
+                                <option value='Tuition Fee Queries'>Tuition Fee Queries</option>
+                                <option value='Payment Issues and Delay'>Payment Issues and Delay</option>
+                                <option value='Refund Requests'>Refund Requests</option>
+                                <option value='Discounts and Scholarships'>Discounts and Scholarships</option>
+                                <option value='Late Payment Charges'>Late Payment Charges</option>
+                                <option value='Admission Process and Requirements'>Admission Process and Requirements</option>
+                                <option value='Waiting List Queries'>Waiting List Queries</option> <option value='Transfer Requests'>Transfer Requests</option>
+                                <option value='Document Submission and Verification'>Document Submission and Verification</option>
+                                <option value='FOH Assistance'>FOH Assistance</option>
+                                <option value='Catering'>Catering</option>
+                                <option value='Uniform Shop'>Uniform Shop</option>
+                                <option value='VLE'>VLE</option>
+                                <option value='Medical'>Medical</option>
+                                <option value='Cleanliness and Hygiene'>Cleanliness and Hygiene</option>
+                                <option value='ECAs'>ECAs</option>
+                                <option value='After-School Activities'>After-School Activities</option>
+                                <option value='Behavior Concerns'>Behavior Concerns</option>
+                                <option value='Bullying and Peer Conflicts'>Bullying and Peer Conflicts</option>
+                                <option value='Classroom Disruptions'>Classroom Disruptions</option>
+                                <option value='Detention and Suspension Queries'>Detention and Suspension Queries</option>
+                                <option value='EYFS'>EYFS</option>
+                                <option value='Primary / KS1 / KS2'>Primary / KS1 / KS2</option>
+                                <option value='Secondary'>Secondary</option>
+                                <option value='Email issues'>Email issues</option>
+                                <option value='Other communication concerns'>Other communication concerns</option>
+                                <option value='Google Review'>Google Review</option>
+                                <option value='Events'>Events</option>
+                                <option value='Others'>Others</option>
                             </select>
                         </div>
 
@@ -487,5 +540,6 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script><script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siq14ef374000c517bb0284444340e6af2d57ae7a2d3bf9d6f2e2655ce55203f439" defer></script>
 </body>
 </html>
